@@ -1,0 +1,71 @@
+To import from csv file:
+	load data local infile '/mnt/Programs/Codes/BootCampJava/databases/order - order.csv' into table orders  fields terminated by ',' lines terminated by '\n';
+	
+	
+	
+	select dish_id as id, (select name from dishes where dish_id=dish_id) as name, count(order_id) as count from orders where huser_name="mukhesh" group by dish_id;
+	
+	
+	
+To get data for pie chart
+	select d.dish_id, d.name, count(o.dish_id) as count from orders o inner join dishes d on o.dish_id=d.dish_id where o.huser_name="mukhesh"  group by o.dish_id;
+	
+	select  o.order_id , o.user_name, d.name, o.huser_name, o.time_of_order, o.status, o.quantity from orders o inner join dishes d on o.dish_id=d.dish_id;
+	
+	
+	
+REGULAR EXPRESSIONS:
+
+email: [a-zA-Z0-9.]*[@][a-zA-Z0-9.]+[.][a-zA-Z0-9]+
+
+password:[\w\W]{8,}
+
+phone: [\d]{10}
+
+
+
+insert into dishes (huser_name, name, type, description, price, time_taken) values('mukhesh', 'test', 'veg', 'des', 54, '00:09:00');
+
+
+
+graph:
+day wise no. of orders:
+		select dayname(time_of_order) as day, count(order_id) as count from orders group by dayname(time_of_order);
+		
+max count of each dishes in a perticular day:
+	select max(count) from (select dayname(time_of_order) as day, count(order_id) as count from orders where dish_id=113 group by dayname(time_of_order)) as result;
+	
+	
+dish name,day,count
+select  dayname(o.time_of_order) as day, count(o.order_id) as count from orders o left join dishes d on o.dish_id=d.dish_id  group by dayname(o.time_of_order);
+
+
+
+select d.dish_id, d.name, dayname(o.time_of_order) as day, count(o.order_id) as count from orders o left join dishes d on o.dish_id=d.dish_id  group by dayname(o.time_of_order),d.name,d.dish_id;
+
+
+
+
+
+
+
+
+table:
+	select dish_id, dayname(time_of_order) as day, count(order_id) as count from orders group by dayname(time_of_order), dish_id;
+	
+	
+	
+create view:
+	create view  order_stat_01 as select dish_id, dayname(time_of_order) as day, count(order_id) as count from orders group by dayname(time_of_order), dish_id;
+	
+	
+	create view  order_stat as select d.dish_id, d.count, d.day from order_stat_01 d inner join (select dish_id , max(count) as max from order_stat_01 group by dish_id) o on d.dish_id=o.dish_id and d.count=o.max order by dish_id;
+	
+	
+	
+	
+	
+	
+	select o.dish_id, d.name,dayname(o.time_of_order) as day, count(o.order_id) as count from orders o inner join dishes d on o.dish_id=d.dish_id where o.dish_id=113  group by dayname(o.time_of_order),o.dish_id;
+
+	
